@@ -5,6 +5,12 @@
 <h1 align="center">Optomarket</h1>
 <p align="center"><em>AI-Driven Customer Segmentation and Analysis Tool</em></p>
 
+<p align="center">
+  <a href="https://optomarket.streamlit.app"><img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Open in Streamlit"></a>
+  <br>
+  <strong><a href="https://optomarket.streamlit.app">Live demo → optomarket.streamlit.app</a></strong>
+</p>
+
 ---
 
 ## About the project
@@ -82,6 +88,10 @@ The data is synthetic, so it contains no real customer or card information. You 
 | Machine learning | scikit-learn (K-Means, StandardScaler, PCA) |
 | Visualization | Matplotlib, Seaborn |
 | Generative AI | Google Gemini API |
+
+## Try it
+
+The app is live at **[optomarket.streamlit.app](https://optomarket.streamlit.app)**. Download the sample CSV from this repo, upload it in the sidebar, and click **Process Data**.
 
 ## Running it locally
 
