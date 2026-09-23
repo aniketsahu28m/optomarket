@@ -1,82 +1,96 @@
 <p align="center">
-  <img src="logo.jpg" alt="Optomarket logo" width="360">
+  <img src="logo.jpg" alt="Optomarket" width="380">
 </p>
 
-# Optomarket
+<h1 align="center">Optomarket</h1>
+<p align="center"><em>AI-Driven Customer Segmentation and Analysis Tool</em></p>
 
-**AI-driven customer segmentation and analysis tool.**
+---
 
-Optomarket takes a CSV of customer transactions, groups customers into segments with K-Means clustering, visualizes how the segments differ, and uses Google Gemini to write a profile and marketing strategy for each one. It is built with Streamlit, so the whole workflow runs in the browser.
+## About the project
 
-## Features
+Businesses collect huge amounts of transaction data, but raw transactions don't tell a marketing team *who* their customers are or *how* to reach them. Treating every customer the same wastes budget, and fraud patterns get lost in the noise.
 
-- **Upload and preview** a transaction CSV from the sidebar.
-- **Automatic cleaning**: fills missing numeric and categorical values and calculates each customer's age from their date of birth.
-- **Clustering**: segments customers into 4 groups by transaction amount, age, fraud flag and city population.
-- **Visualizations**: amount-vs-age scatter plot, violin plot of amounts, age distribution histogram and a 2D PCA plot of the clusters.
-- **AI recommendations**: Gemini generates a title, analysis, psychological profile, marketing strategy and fraud-prevention advice for each segment.
-- **Downloads**: export the segmented data (CSV) and segment profiles (JSON).
+**Optomarket turns raw transaction data into clear customer segments and ready-to-use marketing strategy.** An analyst uploads a transaction file, and Optomarket:
 
-## Getting started
+1. cleans and prepares the data,
+2. uses machine learning to group customers with similar behaviour into segments,
+3. visualizes how those segments differ, and
+4. uses Google's Gemini AI to explain each segment in plain business language: who these customers are, how they think, how to market to them and what fraud risks to watch for.
 
-### 1. Clone and install
+What would normally take a data scientist and a marketing strategist days of work is reduced to a few clicks.
+
+## How it works
+
+```mermaid
+flowchart LR
+    A[Transaction CSV] --> B[Data cleaning<br/>and age calculation]
+    B --> C[Feature scaling]
+    C --> D[K-Means clustering<br/>4 segments]
+    D --> E[Visual analysis]
+    D --> F[Segment statistics]
+    F --> G[Gemini AI]
+    G --> H[Segment profiles and<br/>marketing strategy]
+```
+
+### 1. Data preparation
+Real-world data is messy. Optomarket fills missing numbers with the median, fills missing categories with the most common value, and calculates each customer's **age at the time of the transaction** from their date of birth.
+
+### 2. Customer segmentation
+Customers are clustered with **K-Means** into **4 segments** using four behavioural signals:
+
+| Feature | Why it matters |
+|---|---|
+| **Transaction amount** | Spending power and purchase size |
+| **Age** | Life stage, which drives preferences and channels |
+| **Fraud flag** | Separates risky behaviour from normal behaviour |
+| **City population** | Urban vs. smaller-town customers |
+
+The features are standardized first so that no single one (like city population, which runs into the lakhs) dominates the clustering.
+
+### 3. Visual analysis
+Four charts show what makes each segment distinct:
+
+- **Amount vs. Age scatter plot**: where each segment sits by spending and age
+- **Violin plot**: the full spread of transaction amounts per segment
+- **Age distribution histogram**: the age makeup of each segment
+- **PCA plot**: all features compressed into 2D to show how well-separated the segments are
+
+### 4. AI-generated insights
+The statistics for each segment (averages, spreads and sizes) are sent to **Google Gemini**, which writes a report for every segment containing:
+
+- a **professional segment title**
+- an **analysis** of its key characteristics
+- a **psychological profile** of the typical customer
+- **marketing strategies** tailored to that segment
+- **targeting and fraud-prevention** recommendations
+
+The segmented data and segment profiles can be downloaded for use in other tools.
+
+## Dataset
+
+The repo includes a sample dataset, **`Augmented_IndiaTransactMultiFacet2024.csv`**: about **10,000 synthetic card transactions** from customers across **28 Indian states**, from April 2022 to April 2024. Each record includes the transaction amount, spending category (entertainment, travel, online shopping, fitness and medical), customer demographics, location and a fraud label.
+
+The data is synthetic, so it contains no real customer or card information. You can upload any CSV with the same columns to analyse your own data.
+
+## Tech stack
+
+| Area | Tools |
+|---|---|
+| Web app | Streamlit |
+| Data processing | pandas, NumPy |
+| Machine learning | scikit-learn (K-Means, StandardScaler, PCA) |
+| Visualization | Matplotlib, Seaborn |
+| Generative AI | Google Gemini API |
+
+## Running it locally
 
 ```bash
 git clone https://github.com/aniketsahu28m/optomarket.git
 cd optomarket
-python3 -m venv venv
-source venv/bin/activate
 pip install -r requirements.txt
-```
-
-### 2. Add your Gemini API key
-
-Get a free key from [Google AI Studio](https://aistudio.google.com/app/apikey), then set it as an environment variable:
-
-```bash
-export GEMINI_API_KEY="your-key-here"
-```
-
-The app still runs without a key; only the AI recommendations are disabled.
-
-### 3. Run
-
-```bash
+export GEMINI_API_KEY="your-key-here"   # from https://aistudio.google.com/app/apikey
 streamlit run app.py
 ```
 
-Then open http://localhost:8501.
-
-## Usage
-
-1. Upload a CSV in the sidebar. A sample dataset, `Augmented_IndiaTransactMultiFacet2024.csv`, is included in this repo.
-2. Click **Process Data** to clean the data and run clustering.
-3. Use the buttons to switch between **Show Graphs**, **Show Recommendations** and **View Segmented Data**.
-4. Download the results with the download buttons.
-
-### Expected CSV columns
-
-Your file needs these columns (missing values are filled in automatically):
-
-`trans_date_trans_time`, `dob`, `amt`, `is_fraud`, `city_pop`, `lat`, `long`, `merch_lat`, `merch_long`, `customer_id`, `category`, `gender`, `city`, `state`, `job`, `first`, `last`, `merchant`
-
-The included sample dataset is synthetic; it contains no real customer or card data.
-
-## Deploying to Streamlit Community Cloud
-
-1. Push this repo to GitHub.
-2. At [share.streamlit.io](https://share.streamlit.io), create an app from the repo with `app.py` as the main file.
-3. Under **Advanced settings → Secrets**, add:
-   ```toml
-   GEMINI_API_KEY = "your-key-here"
-   ```
-
-## Tech stack
-
-Python · Streamlit · pandas · NumPy · scikit-learn · Matplotlib · Seaborn · Google Gemini API
-
-## Troubleshooting
-
-- **"No Gemini API key detected"**: set `GEMINI_API_KEY` before starting the app (or in Streamlit Cloud secrets).
-- **"Gemini did not return a result"**: check the key is valid and that you have not run out of API quota.
-- **Recommendations take a while**: Gemini writes a long, detailed report for all four segments, which usually takes 20–60 seconds.
+Upload the sample CSV from the sidebar, click **Process Data**, and explore the graphs, recommendations and segmented data.
